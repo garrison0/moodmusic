@@ -5,8 +5,6 @@ paginate_path: "page:num"
 exclude: ["README.md"] # files to exclude
 highlighter: rouge
 markdown: kramdown
-disqus: dbyll
-google_analytics: dbyll
 title: garrison
 
 defaults:
@@ -16,14 +14,11 @@ defaults:
     values:
       title: 
 
-description: Stylish Jekyll Theme
+description: ok
 author:
   name: Garrison
   email: mcmullengn@gmail.com
   github: garrison0 
-  twitter: n/a
-  pinterest: asd123
-  linkedin: asd123
   bio: Give me a job!
   email_md5: b161f5ad07cb5dae507cd626912126b2
 

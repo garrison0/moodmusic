@@ -5,21 +5,21 @@ paginate_path: "page:num"
 exclude: ["README.md"] # files to exclude
 highlighter: rouge
 markdown: kramdown
-title: garrison
+title: 
 
 defaults:
   -
     scope:
       path: "" # empty string for all files
-    values:
+    values: 
       title: 
 
 description: ok
 author:
-  name: Garrison
+  name: moodmusic
   email: mcmullengn@gmail.com
   github: garrison0 
-  bio: Give me a job!
+  bio: A cymbal with the sound of a broken pot with hard stick - no resonance
   email_md5: b161f5ad07cb5dae507cd626912126b2
 
 rss_path: feed.xml
@@ -27,7 +27,7 @@ categories_path: categories.html
 tags_path: tags.html
 
 # set it as url of an image
-sidebar_background_image: https://www.dropbox.com/s/fz897mbpr34p0dd/sidebar%20bg2.png?raw=1
+#sidebar_background_image: https://www.dropbox.com/s/fz897mbpr34p0dd/sidebar%20bg2.png?raw=1
 
 BASE_PATH:
 

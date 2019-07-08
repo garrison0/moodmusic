@@ -9,6 +9,10 @@ body{
 	color: #2c3e50;
 }
 
+a {
+  color: green;
+}
+
 blockquote {
     padding: 10px 20px;
     margin: 0 0 20px;
@@ -48,13 +52,36 @@ blockquote {
 a.nav-link {
 	padding-bottom: 5px;
 	padding-top: 7px;
-	color: #aaa;
+	color: blue;
+	text-decoration: underline
 }
+
+a:link {
+  text-decoration: underline;
+  color: green;
+}
+
+a:visited {
+  text-decoration: underline;
+  color: green;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: green;
+}
+
+a:active {
+  text-decoration: underline;
+  color: green;
+}
+
 a.nav-link i{
 	font-family: "Cormorant", serif, monospace;
 	font-size: 16px;
+	color: blue;
 }
-a.nav-link:hover { color: #777; }
+a.nav-link:hover { color: #777;}
 
 #bio {
 	font-family: "Cormorant", serif, monospace;

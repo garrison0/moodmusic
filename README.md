@@ -1,1 +1,1 @@
-this is the site i made to stroke my ego
+this is unfortunately my blog

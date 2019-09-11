@@ -3,7 +3,7 @@ layout: post
 title: vagueness and knowability	
 categories: [thoughts]
 tags: [vaguely-philosophical]
-fullview: false
+fullview: true
 comments: true
 math: true
 urlcolor: #777

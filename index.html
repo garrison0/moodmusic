@@ -1,74 +1,166 @@
----
-layout: page
-tagline:
----
+<html>
 
-{% for post in paginator.posts %}
+<body>
 
-<article class="home">
-
-  <span class="post-date">
-    {% assign d = post.date | date: "%d" | plus:'0' %}
-    {{ post.date | date: "%B" }}
-    {% case d %}
-    {% when 1 or 21 or 31 %}{{ d }}st,
-    {% when 2 or 22 %}{{ d }}nd,
-    {% when 3 or 23 %}{{ d }}rd,
-    {% else %}{{ d }}th,
-    {% endcase %}
-    {{ post.date | date: "%Y" }}
-  </span>
-
-  <h2>
-    <a href="{{ site.BASE_PATH }}{{ post.url }}">{{ post.title }}</a>
-  </h2>
-
-  <div>
-    {% if post.fullview %}
-    {{ post.content }}
-    {% else %}
-    {% if post.shortinfo %}
-    {{ post.shortinfo }}
-    {% elsif post.description %}
-    {{ post.description }}
-    {% else %}
-    {{ post.excerpt }}
-    {% endif %}
-    {% endif %}
+  <div class="row">
+    <div class="column">
+      <img src="assets/media/nonsense.jpeg" style="width:100%" onclick="redirect(0);">
+    </div>
+    <div class="column">
+      <img src="assets/media/music.jpeg" style="width:100%" onclick="redirect(1);">
+    </div>
+    <div class="column">
+      <img src="assets/media/github.jpeg" style="width:100%" onclick="redirect(2);">
+    </div>
   </div>
 
-</article>
-{% endfor %}
-<hr/>
+  <canvas id="testCanvas"></canvas>
 
-<ul class="pager"> 
+</body>
 
-  {% if paginator.previous_page %}
-  <li class="previous">
-    {% if paginator.previous_page == 1 %}
-    <a href="{{ site.BASE_PATH }}/">&larr; Newer</a>
-    {% else %}
-    <a href="{{ site.BASE_PATH }}/{{ site.paginate_path | replace: ':num', paginator.previous_page }}">&larr; Newer</a>
-    {% endif %}
-  </li>
-  {% else %}
-  <li class="previous disabled">
-    <a>&larr; Newer</a>
-  </li>
-  {% endif %}
-  
-  <li>
-    <span class="page_number">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
-  </li>
+<head>
+  <title>hi there</title>
 
-  {% if paginator.next_page %}
-  <li class="next">
-    <a href="{{ site.BASE_PATH }}/{{ site.paginate_path | replace: ':num', paginator.next_page }}">Older &rarr;</a>
-  </li>
-  {% else %}
-  <li class="next disabled">
-    <a>Older &rarr;</a>        
-  </li>
-  {% endif %}
+  <style type="text/CSS">
+  body {background-color: #000000}
+  .row {
+    justify-content: center;
+    display: flex;
+  }
 
-</ul>
+  .column {
+    opacity: 1;
+    transition: opacity .25s ease-in-out;
+    padding: 5px;
+  }
+
+  .column:hover{
+    opacity: 0.5;
+    cursor: pointer;
+  }
+  </style>
+
+  <script type="text/javascript">
+    function redirect(which){
+      switch(which){
+        case 0:
+          window.location = "blog/index.html";
+          break;
+        case 1:
+          window.location = "https://soundcloud.com/garrison0";
+          break;
+        case 2:
+          window.location = "https://github.com/garrison0";
+          break;
+      }
+    }
+  </script>
+
+  <script src="stats.min.js"></script>
+  <script src="proton.min.js"></script>
+  <script>
+    var canvas;
+    var context;
+    var proton;
+    var renderer;
+    var emitter;
+
+    main();
+    function main() {
+      canvas = document.getElementById("testCanvas");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight - 100;
+      context = canvas.getContext('2d');
+
+      createProton();
+      tick();
+    }
+
+    function createProton(image) {
+      proton = new Proton;
+      emitter = new Proton.Emitter();
+      emitter.rate = new Proton.Rate(new Proton.Span(.75, 2.5), 1);
+
+      emitter.addInitialize(new Proton.Mass(1));
+      emitter.addInitialize(new Proton.Radius(2, 4));
+      emitter.addInitialize(new Proton.P(new Proton.LineZone(100, 0, canvas.width - 100, 0)));
+      emitter.addInitialize(new Proton.Life(1, 1.5));
+      emitter.addInitialize(new Proton.V(new Proton.Span(4,6), new Proton.Span(180, 180), 'polar'));
+
+      emitter.addBehaviour(new Proton.Gravity(-3.3));
+      emitter.addBehaviour(new Proton.Color('#ffffff', 'random'));
+      emitter.addBehaviour(new Proton.Alpha(1,0));
+
+      emitter.emit();
+      proton.addEmitter(emitter);
+
+      renderer = new Proton.CanvasRenderer(canvas);
+      renderer.onProtonUpdate = function() {
+        context.fillStyle = "rgba(0, 0, 0, 0.1)";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+      };
+      proton.addRenderer(renderer);
+
+      ////NOTICE :you can only use two emitters do this effect.In this demo I use more emitters want to test the emtter's life
+      proton.addEventListener(Proton.PARTICLE_DEAD, function(particle) {
+        if (Math.random() < .7)
+          createFirstEmitter(particle);
+        else
+          createSecendEmitter(particle);
+      });
+    }
+
+    function createFirstEmitter(particle) {
+      var subemitter = new Proton.Emitter();
+      subemitter.rate = new Proton.Rate(new Proton.Span(250, 300), 1);
+      subemitter.addInitialize(new Proton.Mass(1));
+      subemitter.addInitialize(new Proton.Radius(1, 2));
+      subemitter.addInitialize(new Proton.Life(1, 3));
+      subemitter.addInitialize(new Proton.V(new Proton.Span(.78, 1.28), new Proton.Span(0, 360), 'polar'));
+
+      subemitter.addBehaviour(new Proton.RandomDrift(3, 6, .05));
+      subemitter.addBehaviour(new Proton.Alpha(1, 0));
+      subemitter.addBehaviour(new Proton.Color('ffffff', 'random'));
+
+      subemitter.p.x = particle.p.x;
+      subemitter.p.y = particle.p.y;
+      subemitter.emit('once', true);
+      proton.addEmitter(subemitter);
+    }
+
+    function createSecendEmitter(particle) {
+      var subemitter = new Proton.Emitter();
+      subemitter.rate = new Proton.Rate(new Proton.Span(100, 120), 1);
+
+      subemitter.addInitialize(new Proton.Mass(1));
+      subemitter.addInitialize(new Proton.Radius(4, 8));
+      subemitter.addInitialize(new Proton.Life(1, 2));
+      subemitter.addInitialize(new Proton.V([.9, 1.5], new Proton.Span(0, 360), 'polar'));
+
+      subemitter.addBehaviour(new Proton.Alpha(1, 0));
+      subemitter.addBehaviour(new Proton.Scale(1, .1));
+      subemitter.addBehaviour(new Proton.RandomDrift(2, 4, .05));
+      //var color = Proton.MathUtils.randomColor();
+      //subemitter.addBehaviour(new Proton.Color(color));
+      subemitter.addBehaviour(new Proton.Color('ffffff', 'random'));
+
+      subemitter.p.x = particle.p.x;
+      subemitter.p.y = particle.p.y;
+      subemitter.emit('once', true);
+      proton.addEmitter(subemitter);
+    }
+
+    function tick() {
+      requestAnimationFrame(tick);
+
+      // stats.begin();
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight - 100;
+      proton.update();
+      // stats.end();
+    }
+  </script>
+
+</head>
+
+</html>

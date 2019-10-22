@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>very hirable</title>
+
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Boids in HTML5</title>
+</head>
+
+<style>
+  #g{
+    z-index: 0;
+    position:absolute;
+    margin-top: 0%;
+    border-radius: 15px;
+    opacity: 0.8;
+    background-color: rgba(255,255,255,0);
+  }
+
+  iframe {
+    border: 0px;
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    width: 100%;
+    height: 500px;
+    z-index: 2;
+    opacity: 1;
+  }
+
+  body {
+    background-color: #ffffff;
+    font-family: Monospace;
+    margin: 0px;
+    overflow: hidden;
+  }
+
+  .row {
+    justify-content: center;
+    display: flex;
+  }
+
+  #borderBottom {
+    border-bottom: 1px solid black;
+    margin-top: 105px;
+    margin-left: 5% auto;
+    margin-right: auto;
+    position: absolute;
+    width: 90%;
+  }
+
+  .column {
+    opacity: 1;
+    transition: opacity .25s ease-in-out;
+    padding: 0px;
+  }
+
+  .column:hover{
+    opacity: 0.2;
+    cursor: pointer;
+  }
+</style>
+
+
+
+<body>
+  <div class="row">
+    <div class="column">
+      <img src="../../assets/media/about.png" style="width:100%" onclick="redirect(3);">
+    </div>
+    <div class="column">
+      <img src="../../assets/media/nonsense.png" style="width:100%" onclick="redirect(0);">
+    </div>
+    <div class="column">
+      <img src="../../assets/media/music.png" style="width:100%" onclick="redirect(1);">
+    </div>
+    <div class="column">
+      <img src="../../assets/media/github.png" style="width:100%" onclick="redirect(2);">
+    </div>
+    <div class="column">
+      <img src="../../assets/media/projects.png" style="width:100%" onclick="redirect(4);">
+    </div>
+    <div id="borderBottom"></div>
+  </div>
+
+  <script type="text/javascript">
+    function redirect(which){
+      switch(which){
+        case 0:
+          window.location = "../../blog/index.html";
+          break;
+        case 1:
+          window.location = "https://soundcloud.com/garrison0";
+          break;
+        case 2:
+          window.location = "https://github.com/garrison0";
+          break;
+        case 3:
+          break;
+        case 4:
+          window.location = "../../projects/previewpage.html";
+          break;
+      }
+    }
+    </script>
+
+  <script>  
+    var canv = document.getElementById('g');
+
+    function updateMousePosition(e){
+      if (BoidGlobals.mousePosition == null) return;
+      BoidGlobals.mousePosition.d[0] = e.clientX;
+      BoidGlobals.mousePosition.d[1] = e.clientY - 110;
+    }
+
+    function mouseUp(e){
+      BoidGlobals.mousePosition = null;
+    }
+
+    function mouseDown(e){
+      var position = new Vector();
+      position.d[0] = e.clientX;
+      position.d[1] = e.clientY - 110;
+      BoidGlobals.mousePosition = position;
+    }
+  </script>
+
+  <div>
+    <canvas id="g"></canvas>
+    <iframe id="myiframe" src="index.html"></iframe>
+    <script src="boids.js"></script>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+
+  <script>
+    const frame = document.getElementById('g');
+
+    window.addEventListener('mousemove', e => {
+      updateMousePosition(e);
+    });
+
+    window.addEventListener('mousedown', e => {
+      mouseDown(e);
+    });
+
+    window.addEventListener('mouseup', e => {
+      mouseUp(e);
+    });
+
+    // const box = document.getElementById('textboy');
+    // var offsets = box.getBoundingClientRect();
+    var canv = document.getElementById('g');
+    canv.style.width = window.innerWidth;
+    // canv.style.top = offsets.top;
+    // canv.style.left = offsets.left;
+    // canv.style.height = box.clientHeight;
+    // canv.style.width = box.clientWidth;
+
+  </script>
+</body>
+
+</html>
+

@@ -13,6 +13,12 @@
 	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+  	<style>
+  		#aboutpage_container:after {
+  			border-top: 1px solid black;
+  		}
+  	</style>
+
 	<style id = "mainBoidDiv" type='text/css'>
 		div {position:absolute;width:100%;height:100%;}
 	</style>
@@ -419,7 +425,7 @@
 </head>
 
 <body onload = "initBoids();">
-	<div onmousedown="mouseDown(event);" onmouseup = "mouseUp(event);" onmousemove = "updateMousePosition(event);">
+	<div id="thisone?" onmousedown="mouseDown(event);" onmouseup = "mouseUp(event);" onmousemove = "updateMousePosition(event);">
 		<canvas id="g">Your browser doesn't support html5's &lt;canvas&gt; tag.  Upgrade to an HTML5-compliant browser, such as Firefox or the beta for Internet Explorer 9!</canvas>
 	</div>
 

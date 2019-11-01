@@ -89,10 +89,10 @@
 
       #borderBottom {
         border-bottom: 1px solid black;
-        margin-top: 107px;
+        margin-top: 5.9%;
         margin-left: 5% auto;
         margin-right: auto;
-        position: absolute;
+        position: fixed;
         width: 90%;
       }
 
@@ -110,6 +110,17 @@
       .row {
         justify-content: center;
         display: flex;
+        margin-top:1%;
+        margin-bottom:1%;
+      }
+
+      .row:after {
+        border-bottom: 1px solid black;
+        margin-top: 5.9%;
+        margin-left: 5% auto;
+        margin-right: auto;
+        position: fixed;
+        width: 90%;
       }
 
     </style>
@@ -137,7 +148,7 @@
       <div class="column">
         <img src="../assets/media/projects.png" style="width:100%" onclick="redirect(4);">
       </div>
-      <div id="borderBottom"></div>
+      <!-- <div id="borderBottom"></div> -->
     </div>
 
     <script type="text/javascript">
@@ -163,10 +174,9 @@
 
     <div class="container">
 
-      <div class="span3 mt-5 mb-5">
+      <div class="span3 mt-4 mb-4">
         <div class="col-sm12">
-          <p class="text-center">hi, here's some stuff I've made</p>
-          <div class="line"></div>
+          <p class="text-center">click them!</p>
         </div>
       </div>
 
@@ -175,7 +185,7 @@
 
           <div class="corner-wrapper">
             <iframe class="preview" id="game" target="game" src="../assets/media/wikigamesample.png"></iframe>
-            <div class="textbox" onClick="location.href='http://lahks.me';" onMouseOver="pop(0)">
+            <div class="textbox" onClick="location.href='http://lahks.me';">
               <span class="textbox-text textbox-layer_slideup">puzzles - courtesy of wikipedia</span>
             </div>
           </div>
@@ -194,7 +204,7 @@
         <div class="col-sm">
           
            <div class="corner-wrapper">
-            <iframe class="preview" id="mountains" src="mountains.html"></iframe>
+            <iframe class="preview" id="mountains" src="mountains.html?preview=true"></iframe>
             <div class="textbox" onClick="location.href='mountains.html';">
               <span class="textbox-text" id="mountainsPopup">mountains for music visualization</span>
             </div>
@@ -202,7 +212,31 @@
 
         </div>
       </div>
-    </div>
 
+      <div class="row mt-3 ml-3 mb-5">
+
+        <div class="col-sm">
+          <div class="corner-wrapper">
+              <iframe class="preview" id="sitting" src="sitting.html"></iframe>
+              <div class="textbox" onClick="location.href='sitting.html';">
+                <span class="textbox-text" id="sittingPopup">i am sitting in a convolver</span>
+              </div>
+          </div>
+        </div>
+      
+        <div class="col-sm">
+          <div class="corner-wrapper">
+              <iframe class="preview" id="bgSite" src="bgSite/index.html?preview=true"></iframe>
+              <div class="textbox" onClick="location.href='bgSite/index.html';">
+                <span class="textbox-text" id="sittingPopup">proof of concept website</span>
+              </div>
+          </div>
+        </div>
+
+        <div class="col-sm">
+        </div>
+      </div>
+
+    </div>
   </body>
 </html>

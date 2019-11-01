@@ -124,7 +124,6 @@
             if(this.direction == 0){
               for (var i = 0; i < this.n; i++){
                 this.nozzles[i].spritz(this.x, this.y, 5, this.nozzles[i].extent * 360);
-                console.log(this.nozzles[i].extent * 360);
               }
             } else {
               
@@ -212,7 +211,7 @@
       createProton();
 
       // initialize stuff here (after creating proton)
-      cf = new CircleFountain(75, canvas.width / 2, canvas.height / 2);
+      cf = new CircleFountain(10, canvas.width / 2, canvas.height / 2);
       //cf2 = new CircleFountain(25, 2 * canvas.width / 3, canvas.height / 2);
       //cf3 = new LineFountain(50, 200, 400, 300);
       tick();
@@ -252,7 +251,7 @@
         //cf3.update(delta);
         if (timestamp > 50 && !stop){
           stop = true;
-          cf.spritz(0, 100, 1000000);
+          cf.spritz(0, 100, 100000);
           //cf2.spritz(1, 5, 10000);
           //cf3.spritz(0, 25, 10000);
         }

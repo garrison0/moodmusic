@@ -39,7 +39,18 @@
 
   .row {
     justify-content: center;
+    position: relative;
     display: flex;
+    margin-top:1%;
+    margin-bottom:1%;
+  }
+
+  #row:after {
+    content: "";
+    position: absolute;
+    border-bottom: 1px solid black;
+    width: 100%;
+    margin-top: 75px;
   }
 
   #borderBottom {
@@ -63,10 +74,8 @@
   }
 </style>
 
-
-
 <body>
-  <div class="row">
+  <div id="row" class="row">
     <div class="column">
       <img src="../../assets/media/about.png" style="width:100%" onclick="redirect(3);">
     </div>
@@ -82,7 +91,6 @@
     <div class="column">
       <img src="../../assets/media/projects.png" style="width:100%" onclick="redirect(4);">
     </div>
-    <div id="borderBottom"></div>
   </div>
 
   <script type="text/javascript">
@@ -110,6 +118,12 @@
     var canv = document.getElementById('g');
 
     function updateMousePosition(e){
+      if (e.clientX < (window.innerWidth / 2)){
+        console.log('we did it?');
+        document.body.style = 'cursor: url(vacuumleft.png) 32 25, auto;'
+      } else {
+        document.body.style = 'cursor: url(vacuum.png) -32 25, auto;'
+      } 
       if (BoidGlobals.mousePosition == null) return;
       BoidGlobals.mousePosition.d[0] = e.clientX;
       BoidGlobals.mousePosition.d[1] = e.clientY - 110;

@@ -29,7 +29,7 @@
     .collapsing {
       -webkit-transition-property: height, visibility;
       transition-property: height, visibility;
-      height:  0;
+      height: 0;
       width: auto !important;
     }
 
@@ -37,14 +37,6 @@
       align-content: center;
       text-align: center;
       margin-top: 20%;
-    }
-
-    #renderCanvas {
-        position: fixed;
-        z-index: -1;
-        width: 100%;
-        height: 100%;
-        touch-action: none;
     }
   </style>
   
@@ -111,9 +103,16 @@
       </div>
     </div>    
 
+    <div id="profPic" page-group="true" style="z-index:2; display: none; padding: 7px;">
+      <a role="button" href="https://moodmusic.me" class="">
+        <img src="itsme.jpg" class="img-fluid rounded-circle mt-3 mr-2 d-block mb-2">
+      </a>
+      <p className="socialLinks">me as an 'entrepreneur'
+                      <br/><br/> here's a normal sidebar thing!</p>
+    </div>
+
     <div id="canvas-container" style="position: relative"></div>
     <div id="container" style="background: black; font-family: monospace">
-
     </div>
 
     <!-- Bootstrap -->

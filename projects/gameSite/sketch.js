@@ -158,12 +158,18 @@ function loadLevel(tmap_name){
         obstacles.add(obstacle);
 
         // make the div
-        d = createDiv("and here's a normal sidebar type thing!");
+        d = createDiv();
         d.parent('container');
         d.size(obj.width, obj.height);
         d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
         d.style('text-align: center; border: 2px solid black; border-radius: 5px;');
         d.style('background: white');
+
+        // grab the prof pic
+        var profDiv = document.getElementById('profPic');
+        profDiv.style.display = "inline-block";
+        d.child(profDiv);
+
         break;
 
       case "donate_s1":
@@ -541,7 +547,6 @@ function resolveButtonHit(player, button){
     showAllProjectsButId(button.id);
   }
 }
-
 
 var FALLING = ``+
   `

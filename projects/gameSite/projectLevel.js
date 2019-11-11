@@ -164,11 +164,11 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/..\/..\/..\/Desktop\/spritesheet_ground.tsx"
+         "source":"spritesheet_ground.tsx"
         }, 
         {
          "firstgid":129,
-         "source":"..\/..\/..\/..\/Desktop\/spritesheet_tiles.tsx"
+         "source":"spritesheet_tiles.tsx"
         }],
  "tilewidth":32,
  "type":"map",

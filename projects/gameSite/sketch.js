@@ -3,6 +3,9 @@ var bgTiles;
 var bg;
 var tmap;
 
+// globals
+// because this is a prototype
+// and i'm not concerned
 var tsets;
 var obstacles;
 var buttons;
@@ -10,6 +13,16 @@ var buttonDivs;
 var player;
 var GRAVITY = 0.35;
 var JUMP = -12;
+var firstTime = true;
+var oldwidth;
+var oldheight;
+var nm;
+var firstLevel;
+var flWidth;
+var flHeight;
+var curlWidth;
+var curlHeight;
+var canJump = false;
 
 // async load
 function preload() {
@@ -25,9 +38,12 @@ function preload() {
 }
 
 function setup() {
-  canvas = createCanvas(window.innerWidth, window.innerHeight, WEBGL);
-  canvas.position(0,0);
-  canvas.style('z-index', '-1');
+  firstLevel = 'aboutLevel';
+  tmap = TileMaps[firstLevel];
+  canvas = createCanvas(tmap.width * 32, tmap.height * 32);
+  canvas.parent('canvas-container');
+  canvas.style('z-index', '0');
+  canvas.style('position', 'absolute');
   canvas.style('-webkit-transition', 'opacity 1200ms ease-in');
   canvas.style('transition', 'opacity 1200ms ease-in');
 
@@ -36,66 +52,85 @@ function setup() {
   buttons = new Group();
   buttonDivs = {};
   useQuadTree(true);
-  player = createSprite(-canvas.width/2,-canvas.height/2,32,32);
+  tmap = TileMaps[firstLevel];
+
+  flWidth = tmap.width * 32;
+  flHeight = tmap.height * 32;
 
   // render the tile map of the first level
-  loadLevel('aboutLevel');
+  loadLevel(firstLevel);
 }
 
 function loadLevel(tmap_name){
   tmap = TileMaps[tmap_name];
-  resizeCanvas(tmap.width * 32, tmap.height * 32);
-  canvas.position(0,0);
-  bgTiles = createGraphics(Math.round(canvas.width), Math.round(canvas.height));
+  nm = tmap_name;
 
-  for (var i = 0; i < tmap.layers[0].data.length; i++){
-    let tileId = tmap.layers[0].data[i] - 1;
+  canvas.remove();
+  curlWidth = tmap.width*32;
+  curlHeight = tmap.height*32;
+  canvas = createCanvas(tmap.width * 32, tmap.height * 32);
+  canvas.parent("canvas-container");
+  canvas.position(Math.max(0, window.innerWidth/2 - canvas.width/2), 0);
 
-    // find which tileset this tile belongs to
-    let j = 0;
-    let candidate = tmap.tilesets[0];
-    // assume non-empty tilesets
-    // while (j < tmap.tilesets.length) {
-    //  candidate = tmap.tilesets[j];
-    //  if (candidate.firstgid <= tileId){
-    //    j++;
-    //  } else {
-    //    break;
-    //  }
-    // }
-    let set = (candidate.source).split(".")[0];
+  // bgTiles = createGraphics(Math.round(canvas.width), Math.round(canvas.height));
 
-    // necessary stuff to find tile position in the img
-    let cols = tsets[set]['json'].columns;
-    let tHeight = tsets[set]['json'].tileheight; 
-    let tWidth = tsets[set]['json'].tilewidth;
+  // for (var i = 0; i < tmap.layers[0].data.length; i++){
+  //   let tileId = tmap.layers[0].data[i] - 1;
 
-    let sx = tWidth * (tileId % cols);
-    let sy = tHeight * Math.floor(tileId / cols);
-    let dx = tWidth * (i % tmap.width);
-    let dy = tHeight * Math.floor(i / tmap.width);
+  //   // find which tileset this tile belongs to
+  //   let j = 0;
+  //   let candidate = tmap.tilesets[0];
+  //   // assume non-empty tilesets
+  //   // while (j < tmap.tilesets.length) {
+  //   //  candidate = tmap.tilesets[j];
+  //   //  if (candidate.firstgid <= tileId){
+  //   //    j++;
+  //   //  } else {
+  //   //    break;
+  //   //  }
+  //   // }
+  //   let set = (candidate.source).split(".")[0];
 
-    // draw the tile where it should be
-    if (tileId > 0){
-      bgTiles.image(tsets[set].img, dx, dy, 32,32, sx, sy,32, 32);
-    }
-  } 
+  //   // necessary stuff to find tile position in the img
+  //   let cols = tsets[set]['json'].columns;
+  //   let tHeight = tsets[set]['json'].tileheight; 
+  //   let tWidth = tsets[set]['json'].tilewidth;
+
+  //   let sx = tWidth * (tileId % cols);
+  //   let sy = tHeight * Math.floor(tileId / cols);
+  //   let dx = tWidth * (i % tmap.width);
+  //   let dy = tHeight * Math.floor(i / tmap.width);
+
+  //   // draw the tile where it should be
+  //   if (tileId > 0){
+  //     bgTiles.image(tsets[set].img, dx, dy, 32,32, sx, sy,32, 32);
+  //   }
+  // } 
 
   // go through the object layer
-  let px;
-  let py;
-  let d;
-  let f;
-  let obstacle;
-  let button;
+  var px;
+  var py;
+  var d;
+  var f;
+  var obstacle;
+  var button;
   for (var i = 0; i < tmap.layers[1].objects.length; i++){
-    let obj = tmap.layers[1].objects[i];
-    px = obj.x - canvas.width/2 + obj.width/2;
-    py = obj.y - canvas.height/2 + obj.height/2;
+
+    var obj = tmap.layers[1].objects[i];
+  
+    px = obj.x + obj.width/2;
+    py = obj.y + obj.height/2;
+
+    // console.log("OBJ WIDTH: " + obj.width);
+    // console.log("OBJ HEIGHT " + obj.height);
+    // console.log("OBJ X: " + obj.x);
+    // console.log("OBJ Y: " + obj.y);
+    // console.log("PX: " + px);
+    // console.log("PY: " + py);
+
     switch(obj.type) {
       case "playerStart":
-        player.position.x = obj.x - canvas.width/2;
-        player.position.y = obj.y - canvas.height/2;
+        player = createSprite(px,py,32,32);
         break;
       
       // create divs that display information
@@ -111,7 +146,7 @@ function loadLevel(tmap_name){
                       + '<br/><br/> click or run into the buttons to change the page.');
         d.parent('container');
         d.size(obj.width, obj.height);
-        d.position(obj.x, obj.y);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
         d.style('text-align: center; border: 2px solid black; border-radius: 5px;');
         d.style('background: white');
         break;
@@ -126,9 +161,78 @@ function loadLevel(tmap_name){
         d = createDiv("and here's a normal sidebar type thing!");
         d.parent('container');
         d.size(obj.width, obj.height);
-        d.position(obj.x, obj.y);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
         d.style('text-align: center; border: 2px solid black; border-radius: 5px;');
         d.style('background: white');
+        break;
+
+      case "donate_s1":
+        obstacle = createSprite(px,py, obj.width, obj.height);
+        obstacle.visible = false;
+        obstacles.add(obstacle);
+
+        // make the div
+        d = createDiv("oh boy! thank you, just hit that button there to donate via paypal!");
+        d.parent('container');
+        d.size(obj.width, obj.height);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
+        d.style('border: 2px solid black; border-radius: 5px;');
+        d.style('text-align:center; background: white;');
+        break;
+
+      case "donate_s2":
+        obstacle = createSprite(px,py, obj.width, obj.height);
+        obstacle.visible = false;
+        obstacles.add(obstacle);
+
+        // use pre-existing div, change proper styling
+        var donateDiv = document.getElementById('donate');
+        donateDiv.style.width = obj.width;
+        donateDiv.style.height = obj.height;
+        donateDiv.style.display = 'inline-block';
+
+        // put it in the another div with
+        // the right position
+        // and then into container for
+        // everything to work right
+        d = createDiv();
+        d.parent('container');
+        d.size(obj.width, obj.height);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
+        d.child(donateDiv);
+        break;
+
+      case "donate_s3":
+        // collision
+        obstacle = createSprite(px,py, obj.width, obj.height);
+        obstacle.visible = false;
+        obstacles.add(obstacle);
+
+        // make the div
+        d = createDiv(FALLING + FALLING);
+        d.parent('container');
+        d.size(obj.width, obj.height);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
+        d.style('border: 2px solid black; border-radius: 5px;');
+        d.style('background: white; overflow: hidden; white-space: pre');
+        break;
+
+      case "displayProject":
+        // no collision
+        // render first project to start
+        // but prep all of them
+        d = createDiv();
+        d.parent('container');
+        d.size(obj.width, obj.height);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
+
+        var group = document.querySelectorAll("[proj-group='true']");
+        group.forEach( (section) => {
+          section.style.width = obj.width;
+          section.style.height = obj.height;
+          section.style.display = "none";
+          d.child(section);
+        });
         break;
 
       // create buttons
@@ -146,7 +250,7 @@ function loadLevel(tmap_name){
         f = resolveClick(button);
         d.mousePressed(f);
         d.size(obj.width, obj.height);
-        d.position(obj.x, obj.y);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
         d.style('align-items: center; justify-content: center; display: flex');
         break;
       
@@ -163,7 +267,7 @@ function loadLevel(tmap_name){
         f = resolveClick(button);
         d.mousePressed(f);
         d.size(obj.width, obj.height);
-        d.position(obj.x, obj.y);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
         d.style('align-items: center; justify-content: center; display: flex');
         break;
 
@@ -180,7 +284,7 @@ function loadLevel(tmap_name){
         f = resolveClick(button);
         d.mousePressed(f);
         d.size(obj.width, obj.height);
-        d.position(obj.x, obj.y);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
         d.style('align-items: center; justify-content: center; display: flex');
         break;
 
@@ -197,14 +301,97 @@ function loadLevel(tmap_name){
         d.mousePressed(f);
         d.parent('container');
         d.size(obj.width, obj.height);
-        d.position(obj.x, obj.y);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
+        d.style('align-items: center; justify-content: center; display: flex');
+        break;
+
+      case "aboutButton":
+        // collision
+        button = createSprite(px,py, obj.width, obj.height);
+        // button.visible = false;
+        button.id = 'about';
+        buttons.add(button);
+
+        // make the DOM button
+        d = createButton('ABOUT!');
+        f = resolveClick(button);
+        d.mousePressed(f);
+        d.parent('container');
+        d.size(obj.width, obj.height);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
+        d.style('align-items: center; justify-content: center; display: flex');
+        break;
+
+      case "paypalButton":
+        // collision
+        button = createSprite(px,py, obj.width, obj.height);
+        button.visible = false;
+        button.id = 'paypal';
+        buttons.add(button);
+
+        // make the DOM button
+        d = createButton('PAYPAL!');
+        f = resolveClick(button);
+        d.mousePressed(f);
+        d.parent('container');
+        d.size(obj.width, obj.height);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
+        d.style('align-items: center; justify-content: center; display: flex');
+        break;
+
+      case "proj1Button":
+        // collision
+        button = createSprite(px,py, obj.width, obj.height);
+        button.visible = false;
+        button.id = 'proj1';
+        buttons.add(button);
+
+        // make the DOM button
+        d = createButton('FIRST');
+        f = resolveClick(button);
+        d.mousePressed(f);
+        d.parent('container');
+        d.size(obj.width, obj.height);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
+        d.style('align-items: center; justify-content: center; display: flex');
+        break;
+
+      case "proj2Button":
+        // collision
+        button = createSprite(px,py, obj.width, obj.height);
+        button.visible = false;
+        button.id = 'proj2';
+        buttons.add(button);
+
+        // make the DOM button
+        d = createButton('SECOND');
+        f = resolveClick(button);
+        d.mousePressed(f);
+        d.parent('container');
+        d.size(obj.width, obj.height);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
+        d.style('align-items: center; justify-content: center; display: flex');
+        break;
+
+      case "proj3Button":
+        // collision
+        button = createSprite(px,py, obj.width, obj.height);
+        button.visible = false;
+        button.id = 'proj3';
+        buttons.add(button);
+
+        // make the DOM button
+        d = createButton('THIRD');
+        f = resolveClick(button);
+        d.mousePressed(f);
+        d.parent('container');
+        d.size(obj.width, obj.height);
+        d.position(canvas.position().x + obj.x, canvas.position().y + obj.y);
         d.style('align-items: center; justify-content: center; display: flex');
         break;
 
       // no type => a wall, for now
       default:
-        px = obj.x - canvas.width/2 + obj.width/2;
-        py = obj.y - canvas.height/2 + obj.height/2;
         obstacle = createSprite(px,py, obj.width, obj.height);
         // obstacle.visible = false;
         obstacles.add(obstacle);
@@ -214,7 +401,30 @@ function loadLevel(tmap_name){
 }
 
 function draw() {
-  background(0,0,0,0);
+  background(0,0,0,255);
+
+  // console.log(player.position.x + " PLAY POS X");
+  // console.log(player.position.y + " PLAY POS Y");
+
+  // for some nebulous reason, the canvas origin moves when
+  // the canvas is resized or a new one is made of a 
+  // different size
+  // i think it may be viewport related.
+  // the translation is the difference in
+  // width and height of changed and initial
+  // canvases, divided by 2
+  if (firstLevel != nm){
+    translate((flWidth - curlWidth)/2, (flHeight-curlHeight)/2);
+    // if (nm == "aboutLevel"){
+    //   translate(-320, 576);
+    // }
+    // if (nm == "donateLevel"){
+    //   translate(320, -576)
+    // }
+    // if (nm == "projectLevel"){
+    //   translate(0,32);
+    // }
+  }
 
   if(keyDown(LEFT_ARROW)){
     player.velocity.x = -6.0;
@@ -224,7 +434,9 @@ function draw() {
     player.velocity.x = 0;
   }
   if(keyWentDown('x')){
-    player.velocity.y = JUMP;
+    if(canJump){
+      player.velocity.y = JUMP;
+    }
   }
 
   player.velocity.y += GRAVITY;
@@ -235,27 +447,13 @@ function draw() {
   // scroll based on player position
   // if they're moving
   // else let the user scroll freely
-  if (Math.abs(player.velocity.x) >= 0.05 || Math.abs(player.velocity.y) > GRAVITY * 2) {
-    window.scrollBy(player.position.x, player.position.y);
+  canJump = (Math.abs(player.velocity.y) <= GRAVITY*2);
+  if (Math.abs(player.velocity.x) >= 0.05 || !canJump) {
+    window.scroll(player.position.x - window.innerWidth/2, player.position.y - window.innerHeight / 2);
   }
 
   player.collide(obstacles, resolvePlayerHit);
   player.collide(buttons, resolveButtonHit);
-
-  // draw bg 
-  // camera.off();
-  // push();
-  // textureMode(NORMAL);
-  // texture(bg);
-
-  // // Assuming img has 100 pixels width and height
-  // beginShape();
-  // vertex(-canvas.width/2, -canvas.height/2, 0, 0, 0);
-  // vertex(canvas.width/2, -canvas.height/2, 0, 1, 0);
-  // vertex(canvas.width/2, canvas.height/2, 0, 1, 1);
-  // vertex(-canvas.width/2, canvas.height/2, 0, 0, 1);
-  // endShape(CLOSE);
-  // pop();
 
   // imageMode(CENTER);
   // image(bgTiles, 0, 0);
@@ -267,13 +465,32 @@ function clearLevel() {
   player.remove();
   obstacles.removeSprites();
   buttons.removeSprites();
-  // clear the dom
+  // go through all used HTML components
+  // set their parent back to the body
+  // and set their displays to 'none'
+  var group = document.querySelectorAll("[page-group='true']");
+  group.forEach( (section) => {
+    section.style.display = "none";
+    document.body.appendChild(section);
+  });
+  // now we can clear the dom
   var div = document.getElementById('container');
   while(div.firstChild){
     div.removeChild(div.firstChild);
   }
+  clear();
 }
 
+function showAllProjectsButId(id){
+  var group = document.querySelectorAll("[proj-group='true']");
+  group.forEach( (section) => {
+    if (section.id == id){
+      section.style.display = "inline-block";
+    } else {
+      section.style.display = "none";
+    }
+  });
+}
 var resolveClick = function(button) {
   return () => {
     resolveButtonHit(player, button);
@@ -284,7 +501,7 @@ function resolvePlayerHit(player, obs){
   // if there's x overlap, set velocity.y = 0 for player
   if  ((player.position.x + player.width/2 - 2 >= obs.position.x - obs.width/2)
     && (player.position.x - player.width/2 + 2 <= obs.position.x + obs.width/2)
-    && (player.velocity.y >= -1)) {
+    && (player.velocity.y >= -5)) {
     player.velocity.y = 0;
   }
 }
@@ -294,14 +511,76 @@ function resolveButtonHit(player, button){
     clearLevel();
     window.location = "https://www.github.com/garrison0";
   }
+  if (button.id == "paypal"){
+    clearLevel();
+    window.location = "https://www.paypal.com/donate/?token=r3wucO8s004dan7wEkiyF_pyfjwAzZtpvVRDK-WB37XJCbJLiOWdpgzM-_x1RJcqV7O5Jm&country.x=US&locale.x=";
+  }
   if (button.id == "donate"){
     clearLevel();
-    //loadLevel(button.id + "Level");
+    firstTime = false;
+    loadLevel("donateLevel");
+  }
+  if (button.id == "about"){
+    clearLevel();
+    firstTime = false;
+    loadLevel("aboutLevel");
   }
   if (button.id == "secret"){
-    clearLevel();
+    //clearLevel();
   }
   if (button.id == "project"){
     clearLevel();
+    firstTime = false;
+    loadLevel("projectLevel");
+  }
+
+  // clear other projects
+  // make this one visible
+  // button.id = proj1, proj2, etc
+  if (button.id.substring(0,4) == "proj"){
+    showAllProjectsButId(button.id);
   }
 }
+
+
+var FALLING = ``+
+  `
+   \\o/ 
+    |   
+   / \\  
+        
+     _o 
+     /\\ 
+     |\\ 
+        
+       __\\o 
+      /)  | 
+            
+        __| 
+          \\o 
+          ( \\ 
+              
+        \\ /   
+         |    
+        /o\\   
+             
+       |__    
+      o/      
+     / )      
+              
+   o/__       
+   |  (\\     
+              
+  o_          
+  /\\          
+   /|          
+              
+    \\o/         
+     |         
+    / \\         
+        
+       o       
+      /|\\    
+      / \\     
+        `; 
+            

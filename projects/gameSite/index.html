@@ -12,18 +12,107 @@
   </head>
 
   <style>
+    body {
+      background: black;
+    }
+
+    .collapse {
+      display: none;
+      visibility: hidden;
+    }
+
+    .collapse.show {
+      display: block;
+      visibility: visible;
+    }
+
+    .collapsing {
+      -webkit-transition-property: height, visibility;
+      transition-property: height, visibility;
+      height:  0;
+      width: auto !important;
+    }
+
+    .socialLinks {
+      align-content: center;
+      text-align: center;
+      margin-top: 20%;
+    }
+
+    #renderCanvas {
+        position: fixed;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+    }
   </style>
   
   <body>
     <script src="p5.min.js"></script>
     <script src="aboutLevel.js"></script>
+    <script src="donateLevel.js"></script>
+    <script src="projectLevel.js"></script>
     <script src="p5.play.js"></script>
     <script src="sketch.js"></script>
     
     <script>
     </script>
 
-    <div id="container" style="font-family: monospace">
+    <!-- HTML components for the script to use! -->
+    <!-- Use Bootstrap or whatever framework you'd like -->
+    <!-- Keep them all separate, adjust position and extra styling in the script -->
+    <div id="donate" page-group="true" class="card text-center" style="z-index: 2; display: none; background: white; border: 2px solid black; border-radius: 5px;">
+      <div class="card-body">
+        <div class="well well-lg mb-3">oh... well here's a second chance
+                                   <br>but no worries if funds are tight!
+                                            
+        </div>
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="margin-bottom:1%">
+        <input type="hidden" name="cmd" value="_donations" />
+        <input type="hidden" name="business" value="7MF7LH6HVX5G4" />
+        <input type="hidden" name="currency_code" value="USD" />
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+        </form>
+      </div>
+    </div>
+
+    <div id="proj1" page-group="true" proj-group="true" class="card text-center" style="z-index: 2; display: none; background: white; border: 2px solid black; border-radius: 5px;">
+      <div class="card-header">
+        Featured Project 1
+      </div>
+      <div class="card-body" style="height: 100%">
+        <h5 class="card-title">All about it</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+
+    <div id="proj2" page-group="true" proj-group="true" class="card text-center" style="z-index: 2; display: none; background: white; border: 2px solid black; border-radius: 5px;">
+      <div class="card-header">
+        Featured Project 2
+      </div>
+      <div class="card-body" style="height: 100%">
+        <h5 class="card-title">It's so cool</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+      
+    <div id="proj3" page-group="true" proj-group="true" class="card text-center" style="z-index: 2; display: none; background: white; border: 2px solid black; border-radius: 5px;">
+      <div class="card-header">
+        Featured Project 3
+      </div>
+      <div class="card-body" style="height: 100%">
+        <h5 class="card-title">Can you believe it?</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>    
+
+    <div id="canvas-container" style="position: relative"></div>
+    <div id="container" style="background: black; font-family: monospace">
 
     </div>
 

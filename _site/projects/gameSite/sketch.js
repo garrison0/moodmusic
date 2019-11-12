@@ -519,7 +519,7 @@ function resolveButtonHit(player, button){
   }
   if (button.id == "paypal"){
     clearLevel();
-    window.location = "https://www.paypal.com/donate/?token=r3wucO8s004dan7wEkiyF_pyfjwAzZtpvVRDK-WB37XJCbJLiOWdpgzM-_x1RJcqV7O5Jm&country.x=US&locale.x=";
+    window.location = "paypal.me/moodmusic";
   }
   if (button.id == "donate"){
     clearLevel();

@@ -519,7 +519,7 @@ function resolveButtonHit(player, button){
   }
   if (button.id == "paypal"){
     clearLevel();
-    window.location = "paypal.me/moodmusic";
+    window.location.href = "https://www.paypal.me/moodmusic";
   }
   if (button.id == "donate"){
     clearLevel();
